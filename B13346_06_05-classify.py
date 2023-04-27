@@ -1,5 +1,7 @@
 """Classify a remotely sensed image"""
 
+import numpy as np
+
 # https://github.com/GeospatialPython/Learn/raw/master/thermal.zip
 try:
     import gdal
@@ -9,7 +11,7 @@ import colorsys
 # 确定需要处理的遥感影像
 src = "GF1.jpg"
 # 定义输出的遥感影像名称
-tgt = "GF1_3.jpg"
+tgt = "GF1_test.jpg"
 
 # 利用gdal导入遥感影像
 srcArr = gdal_array.LoadFile(src)
@@ -21,11 +23,14 @@ classes = gdal_array.numpy.histogram(srcArr, bins=bins_num)[1]
 
 # 颜色查找表（LUT）：需要比类别的数量多
 # Specified as R, G, B tuples
-lut = [[255, 0, 0], [191, 48, 48], [166, 0, 0], [255, 64, 64], [255, 115, 115],
-       [255, 116, 0], [191, 113, 48], [255, 178, 115], [0, 153, 153],
-       [29, 115, 115], [0, 99, 99], [166, 75, 0], [0, 204, 0], [51, 204, 204],
-       [255, 150, 64], [92, 204, 204], [38, 153, 38], [0, 133, 0],
-       [57, 230, 57], [103, 230, 103], [184, 138, 0]]
+
+# for i in bins_num:
+lut = np.random.rand(bins_num+1,3)
+# lut = [[255, 0, 0], [191, 48, 48], [166, 0, 0], [255, 64, 64], [255, 115, 115],
+#        [255, 116, 0], [191, 113, 48], [255, 178, 115], [0, 153, 153],
+#        [29, 115, 115], [0, 99, 99], [166, 75, 0], [0, 204, 0], [51, 204, 204],
+#        [255, 150, 64], [92, 204, 204], [38, 153, 38], [0, 133, 0],
+#        [57, 230, 57], [103, 230, 103], [184, 138, 0]]
 # 定义将遥感图像划分为不同类别时的起始值
 start = 1
 
@@ -60,6 +65,6 @@ for i in range(len(classes)):
         rgb[j] = gdal_array.numpy.choose(mask, (rgb[j], lut[i][j]))
     start = classes[i]+1
 
-# Save the image
+# 保存图片
 output = gdal_array.SaveArray(rgb.astype(gdal_array.numpy.uint8), tgt, format="JPEG")
 output = None
