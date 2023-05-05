@@ -1,0 +1,6 @@
+<view class="container">
+  <image class="avatar" src="/pages/image/avatar/test.jpg"></image>
+  <view class="hello_container">
+    <text class="hello">Hello world!</text>
+  </view>
+</view>
